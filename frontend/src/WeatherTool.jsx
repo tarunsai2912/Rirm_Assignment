@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const WeatherTool = () => {
   const [location, setLocation] = useState('');
   const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(false)
 
   const handleGetWeather = async () => {
-    const response = await axios.post('https://rirm-assignment-backend.vercel.app/get-weather', { location });
-    setWeather(response.data);
+    setLoading(true)
+    try{
+      if(!location){
+        toast.error("Please give location")
+        setLoading(false)
+        return
+      }
+      const response = await axios.post('https://rirm-assignment-backend.vercel.app/get-weather', { location });
+      if(!response){
+        toast.error('Please enter correct location')
+        setLoading(false)
+      }
+      else{
+        setWeather(response.data);
+        setLoading(false)
+      }
+    }
+    catch(err){
+      toast.error('Please enter correct location')
+      setLoading(false)
+      console.error(err)
+    }
   };
 
   return (
@@ -24,7 +46,7 @@ const WeatherTool = () => {
         className="bg-blue-500 text-white px-4 py-2 rounded"
         onClick={handleGetWeather}
       >
-        Get Weather
+        {loading ? 'Loading...' : 'Get Weather'}
       </button>
       {weather && (
         <div className="mt-4">

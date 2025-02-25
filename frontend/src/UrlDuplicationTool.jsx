@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const URLDuplicationTool = () => {
   const [urls, setUrls] = useState('');
   const [uniqueUrls, setUniqueUrls] = useState([]);
+  const [loading, setLoading] = useState(false)
 
   const handleDeduplicate = async () => {
-    const urlList = urls.split('\n').filter((url) => url.trim() !== '');
-    const response = await axios.post('https://rirm-assignment-backend.vercel.app/duplicate-urls', { urls: urlList });
-    setUniqueUrls(response.data.uniqueUrls);
+    setLoading(true)
+    try{
+      const urlList = urls.split('\n').filter((url) => url.trim() !== '');
+      const response = await axios.post('https://rirm-assignment-backend.vercel.app/duplicate-urls', { urls: urlList });
+      setUniqueUrls(response.data.uniqueUrls);
+      setLoading(false)
+    }
+    catch(err){
+      toast.error('Error in deduplicating')
+      setLoading(false)
+      console.error(err)
+    }
   };
 
   return (
@@ -25,7 +36,7 @@ const URLDuplicationTool = () => {
         className="bg-blue-500 text-white px-4 py-2 rounded"
         onClick={handleDeduplicate}
       >
-        Remove Duplicates
+        {loading ? 'Loading...' : 'Remove Duplicates'}
       </button>
       <div className="mt-4">
         <h2 className="text-xl font-bold">Unique URLs:</h2>

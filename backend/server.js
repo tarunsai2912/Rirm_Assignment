@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(cors());
+app.use(cors({origin: '*'}));
 app.use(bodyParser.json());
 
 // iTqczztUddvB9geL
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
 app.post('/duplicate-urls', (req, res) => {
   const { urls } = req.body;
   const uniqueUrls = [...new Set(urls)];
-  res.json({ uniqueUrls });
+  return res.status(200).json({ uniqueUrls });
 });
 
 // Weather API Endpoint
@@ -36,9 +36,12 @@ app.post('/get-weather', async (req, res) => {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    res.json(data);
+    if(!data){
+      return res.status(500).json({ error: 'Failed to fetch weather data' })
+    }
+    return res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to fetch weather data' });
+    return res.status(500).json({ error: 'Failed to fetch weather data' });
   }
 });
 
