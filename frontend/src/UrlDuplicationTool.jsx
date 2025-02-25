@@ -7,7 +7,7 @@ const URLDuplicationTool = () => {
 
   const handleDeduplicate = async () => {
     const urlList = urls.split('\n').filter((url) => url.trim() !== '');
-    const response = await axios.post('http://localhost:5000/duplicate-urls', { urls: urlList });
+    const response = await axios.post('https://rirm-assignment-backend.vercel.app/duplicate-urls', { urls: urlList });
     setUniqueUrls(response.data.uniqueUrls);
   };
 

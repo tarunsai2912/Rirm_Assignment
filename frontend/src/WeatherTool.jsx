@@ -6,7 +6,7 @@ const WeatherTool = () => {
   const [weather, setWeather] = useState(null);
 
   const handleGetWeather = async () => {
-    const response = await axios.post('http://localhost:5000/get-weather', { location });
+    const response = await axios.post('https://rirm-assignment-backend.vercel.app/get-weather', { location });
     setWeather(response.data);
   };
 
